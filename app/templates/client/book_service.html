@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% from 'bootstrap5/form.html' import render_form, render_field %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-none col-md-2"></div>
+        <div class="col-sm col-md-8">
+			<div class="card">
+				<div class="card-header">
+					<h1 class="display-5 m-3 text-primary">Make a Reservation</h1>
+				</div>
+				<div class="card-body">
+					{{ render_form(booking_form) }}
+				</div>
+			</div>
+        </div>
+        <div class="col-sm-none col-md-2"></div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+{{ super() }}
+	<script>
+		$.datetimepicker.setLocale('en');
+
+		$('#booking_time').datetimepicker({
+			format: 'd.m.Y H:i',
+			formatDate: 'd.m.Y', 
+			dayOfWeekStart: 1, 
+			lang: 'en', 
+			minDate: function(){
+				let now_date = new Date(); 
+				console.log(now_date.toLocaleString())
+				if (now_date.getHours() > 18){
+					now_date.setDate(now_date.getDate() + 1); 
+				};
+				let response_date = `${now_date.getDate()}.${now_date.getMonth()+1}.${now_date.getFullYear()}`;
+				console.log(response_date)
+				return response_date
+			}(),
+			// disabledDates:['1986/01/08','1986/01/09','1986/01/10'],
+			startDate: function(){
+				let now_date = new Date(); 
+				console.log(now_date.toLocaleString())
+				if (now_date.getHours() > 18){
+					now_date.setDate(now_date.getDate() + 1); 
+				};
+				let response_date = `${now_date.getDate()}.${now_date.getMonth()+1}.${now_date.getFullYear()}`;
+				console.log(response_date)
+				return response_date
+			}(), 
+			value: function(){
+				let now_date = new Date(); 
+				if (now_date.getHours() > 18){ 
+					now_date.setDate(now_date.getDate() + 1); 
+				};
+				return `${now_date.getDate()}.${now_date.getMonth()+1}.${now_date.getFullYear()} ${now_date.getTime()}:${now_date.getMinutes()}`;
+			}(), 
+			step: 30, 
+			inline: true, 
+			formatTime: 'H:i', 
+			startTime: function(){
+				let now_date = new Date();
+				console.log("start time", (now_date.getHours() < 8) ? "08:00" : `${now_date.getHours()}:${now_date.getMinutes()}`)
+				return (now_date.getHours() < 8) ? "08:00" : `${now_date.getHours()}:${now_date.getMinutes()}`;
+			}(),
+			minTime: function(){
+				let now_date = new Date();
+				return (now_date.getHours() < 8) ? "08:00" : `${now_date.getHours()}:${now_date.getMinutes()}`;
+			}(), 
+			maxTime: "18:00"
+		}); 
+	</script>
+{% endblock %}

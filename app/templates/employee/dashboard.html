@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% from 'bootstrap5/form.html' import render_form, render_field %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-none col-md-2"></div>
+        <div class="col-sm col-md-8">
+			<div class="card m-3">
+				<div class="card-header">
+					<h1 class="display-5 m-3 text-primary">Work Load</h1>
+				</div>
+				<div class="card-body">
+                    <table class="table table-sm table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Client Name</th>
+                                <th scope="col">Service</th>
+                                <th scope="col">Mark as Complete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for work in work_load %}
+                            <tr>
+                                <th scope="row">{{ work.booking.id }}</th>
+                                <td>{{ work.client.first_name }} {{ work.client.last_name }}</td>
+                                <td>{{work.service.name}}</td>
+                                <td>
+                                    <button class="btn complete-button" data-booking-id={{work.work.booking_id}} data-service-id={{work.work.service_id}}>Mark As Complete</button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+				</div>
+			</div>
+        </div>
+        <div class="col-sm-none col-md-2"></div>
+    </div>
+</div>
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <!-- <img src="..." class="rounded me-2" alt="..."> -->
+            <strong class="me-auto">Work Completed</strong>
+            <small>Just now</small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body" id="toast-body">
+            Hello, world! This is a toast message.
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+    let complete_buttons = document.querySelectorAll('.complete-button')
+    // console.log(complete_buttons);
+    complete_buttons.forEach(button => {
+        button.addEventListener("click", function(event){
+            let target_element = event.target;
+            let target_booking_id = target_element.getAttribute('data-booking-id');
+            let target_service_id = target_element.getAttribute('data-service-id');
+            let target_parent_node = target_element.parentNode.parentNode;
+            console.log(target_booking_id, target_service_id, target_parent_node);
+            if (confirm("Are you sure")){
+                console.log('i am sure');
+                const post_url = `${ window.location.href }complete_job/${ target_booking_id }/${ target_service_id }`
+                console.log(post_url);
+                fetch(post_url, {
+                    method: "PUT", 
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                }).then(response => {
+                    if(response.ok){
+                        console.log('ok response', response);
+                        target_parent_node.remove();
+                        // document.querySelectorAll('.toast-container')[0];
+                        const toastLiveExample = document.getElementById('liveToast');
+                        const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+                        const toast_body = document.getElementById('toast-body')
+                        toast_body.innerText = "Completed "
+                        toastBootstrap.show();
+                    }
+                })
+            }
+        })
+    })
+
+
+</script>
+{% endblock %}

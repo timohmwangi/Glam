@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% from 'bootstrap5/form.html' import render_form, render_field %}
+{% block navbar %}
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-none col-md-2 col-lg-3"></div>
+        <div class="col col-md-8 col-lg-6 m-3">
+            {{ render_form(form) }}
+        </div>
+        <div class="col-none col-md-2 col-lg-3"></div>
+    </div>
+</div>
+{% endblock %}

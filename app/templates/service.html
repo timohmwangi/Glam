@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% import 'macros.html' as macro %}
+{% block content %}
+    {{ super() }}
+
+    {{ macro.render_services(services) }}
+
+    {{ macro.render_testimonials(testimonials) }}
+{% endblock %}

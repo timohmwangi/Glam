@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% from 'bootstrap4/form.html' import render_form, render_field %}
+{% block navbar %}
+<div class="container-fluid bg-light d-none d-lg-block">
+    <div class="row py-2 px-lg-5">
+        <div class="col-lg-6 text-left mb-2 mb-lg-0">
+            <div class="d-inline-flex align-items-center">
+                <small><i class="fa fa-phone-alt mr-2"></i>
+                    <a href="tel:+254799582648">+2547 9958 2648</a>
+                </small>
+                <small class="px-3">|</small>
+                <small><i class="fa fa-envelope mr-2"></i>
+                    <a href="mailto:glamspa@gmail.com">glamspa@gmail.com</a>
+                </small>
+            </div>
+        </div>
+        <div class="col-lg-6 text-right">
+            <div class="d-inline-flex align-items-center">
+                <a class="text-primary px-2" href="">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a class="text-primary px-2" href="">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a class="text-primary px-2" href="">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+                <a class="text-primary px-2" href="">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a class="text-primary pl-2" href="">
+                    <i class="fab fa-youtube"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-none col-md-2 col-lg-3"></div>
+        <div class="col col-md-8 col-lg-6 mt-3">
+            <h1 class="display-5">Login.</h1>
+            {{ render_form(form) }}
+            <a class="btn btn-outline-secondary mt-3" href="{{ url_for('auth.register') }}">I don't have an account.</a>
+        </div>
+        <div class="col-none col-md-2 col-lg-3"></div>
+    </div>
+</div>
+{% endblock %}

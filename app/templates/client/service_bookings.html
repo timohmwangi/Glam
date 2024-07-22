@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% from 'bootstrap5/form.html' import render_form, render_field %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-none col-md-2"></div>
+        <div class="col-sm col-md-8">
+			<div class="card m-3">
+				<div class="card-header">
+					<h1 class="display-5 m-3 text-primary">Select Services</h1>
+				</div>
+				<div class="card-body">
+
+                    <form id="juju">
+                        <ul class="list-group">
+                            {% for service in services %}
+                            <li class="list-group-item">
+                                <input class="form-check-input me-1" type="checkbox" name="service_id" value={{service.id}} id="service-{{ service.id }}">
+                                <label class="form-check-label stretched-link" for="service-{{ service.id }}">{{ service.name }}</label>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        <button class="btn btn-outline-primary" type="submit">done</button>
+                    </form>
+				</div>
+			</div>
+        </div>
+        <div class="col-sm-none col-md-2"></div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+const booking_id = "{{booking_id}}"
+let juju = document.getElementById('juju')
+juju.addEventListener("submit", function(event){
+    event.preventDefault();
+    let inputs = Array.from(juju.getElementsByTagName('input'));
+    let selected = [];
+    inputs.forEach(element => {
+        console.log(element.value, element.checked, element.innerText);
+        if (element.checked){
+            selected.push({"service_id": element.value, "booking_id": booking_id})
+            // selected[element.value] = element.labels[0].innerText
+        };
+    });
+    let post_url  = window.location.href;
+    console.log('selected', selected, post_url);
+
+    fetch(post_url, {
+        method: "POST", 
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({"selected_services": selected})
+    }).then(response => {
+        if(response.ok){
+            console.log('ok response', response)
+            location.href = `${window.location.protocol + '//' + window.location.host}/client`
+        }
+    })
+});
+
+</script>
+{% endblock %}

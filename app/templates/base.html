@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% block head %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="Free HTML Templates" name="keywords">
+    <meta content="Free HTML Templates" name="description">
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <title>
+        {% block title %}
+        Glam Spa{% if title %} | {{ title }}{% endif %}
+        {% endblock title %}
+    </title>
+
+    {% block styles %}
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="{{ url_for('static', filename='lib/animate/animate.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
+    <!-- <link href="{{ url_for('static', filename='lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css') }}" rel="stylesheet" /> -->
+    {{ bootstrap.load_css() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery.datetimepicker.css') }}">
+    <!-- <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.3/themes/base/jquery-ui.css"> -->
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    {% endblock styles %}
+{% endblock head %}
+</head>
+<body>
+{% block body %}
+    {% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-none col-md-3"></div>
+            <div class="col-sm col-md-6">
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="col-none col-md-3"></div>
+        </div>
+    </div>
+    {% endif %}
+    {% endwith %}
+    {% block navbar %}
+    {% if not current_user.is_authenticated %}
+    <!-- Topbar Start -->
+    <div class="container-fluid bg-light d-none d-lg-block">
+        <div class="row py-2 px-lg-5">
+            <div class="col-lg-6 text-left mb-2 mb-lg-0">
+                <div class="d-inline-flex align-items-center">
+                    <small><i class="fa fa-phone-alt mr-2"></i>+2547 9958 2648</small>
+                    <small class="px-3">|</small>
+                    <small><i class="fa fa-envelope mr-2"></i>glamspa@gmail.com</small>
+                </div>
+            </div>
+            <div class="col-lg-6 text-right">
+                <div class="d-inline-flex align-items-center">
+                    <a class="text-primary px-2" href="">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a class="text-primary px-2" href="">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a class="text-primary px-2" href="">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a class="text-primary px-2" href="">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a class="text-primary pl-2" href="">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Topbar End -->
+    {% endif %}
+
+    <!-- Navbar Start -->
+
+    <header class="py-3 mb-3 border-bottom">
+        <div class="container-fluid d-grid gap-3 align-items-center" style="grid-template-columns: 1fr 2fr;">
+            {% if current_user.is_authenticated %}
+            <a href="{{ url_for(current_user.type+'.dashboard') }}" class="navbar-brand ml-lg-3">
+                <h1 class="m-0 text-primary">
+                    <!-- <span class="text-dark">{{ current_user.first_name }}</span>  -->
+                    Dashboard
+                </h1>
+            </a>
+            {% else %}
+            <a href="{{ url_for('main.home') }}" class="navbar-brand ml-lg-3">
+                <h1 class="m-0 text-primary"><span class="text-dark">Glam</span> Spa</h1>
+            </a>
+            {% endif %}
+    
+            <div class="d-flex align-items-center">
+                <ul class="nav nav-pills m-auto py-0">
+                    {% if current_user.is_authenticated %}
+                        {% if current_user.type == 'client' %}
+                        <li class="nav-item">
+                            <a href="{{ url_for('client.book_service') }}" class="nav-link">Book Appointment</a>
+                        </li>
+                        {% endif %}
+                    {% else %}
+                    <li class="nav-item">
+                        <a href="{{ url_for('main.about') }}" class="nav-link">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('main.service') }}" class="nav-link">Our Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('main.team') }}" class="nav-link">Our Team</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('client.book_service') }}" class="nav-link text-primary">Make Appointment</a>
+                    </li>
+                    {% endif %}
+                    
+                </ul>
+                
+                <div class="flex-shrink-0 dropdown">
+                    <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
+                    </a>
+                    <ul class="dropdown-menu text-small shadow">
+                        {% if current_user.is_authenticated %}
+                        <li>
+                            <a href="{{ url_for('auth.logout') }}" class="dropdown-item">Sign Out</a>
+                        </li>
+                        {% else %}
+                        <li>
+                            <a href="{{ url_for('auth.login') }}" class="dropdown-item">Login</a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('auth.register') }}" class="dropdown-item">Register</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- <div class="container-fluid p-0">
+        <nav class="navbar navbar-expand-lg bg-white navbar-light py-3 py-lg-0 px-lg-5">
+            {% if current_user.is_authenticated %}
+            <a href="{{ url_for(current_user.type+'.dashboard') }}" class="navbar-brand ml-lg-3">
+                <h1 class="m-0 text-primary"><span class="text-dark">SPA</span> Center</h1>
+            </a>
+            {% else %}
+            <a href="{{ url_for('main.home') }}" class="navbar-brand ml-lg-3">
+                <h1 class="m-0 text-primary"><span class="text-dark">SPA</span> Center</h1>
+            </a>
+            {% endif %}
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-between px-lg-3" id="navbarCollapse">
+                <ul class="navbar-nav m-auto py-0">
+                    {% if current_user.is_authenticated %}
+                    {% else %}
+                    <li class="nav-item">
+                        <a href="{{ url_for('main.about') }}" class="nav-link">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('main.service') }}" class="nav-link">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('main.team') }}" class="nav-link">Our Team</a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item dropdown">
+                        <a  class="nav-link dropdown-toggle" id="dropdownMenu" data-toggle="dropdown" data-toggle="dropdown"><i class="fas fa-user"></i> Account</a>
+                        <div class="dropdown-menu rounded-0 m-0" aria-labelledby="dropdownMenu">
+                            {% if current_user.is_authenticated %}
+                            <a href="{{ url_for('auth.logout') }}" class="dropdown-item">Logout</a>
+                            {% else %}
+                            <a href="{{ url_for('auth.login') }}" class="dropdown-item">Login</a>
+                            <a href="{{ url_for('auth.register') }}" class="dropdown-item">Register</a>
+                            {% endif %}
+                        </div>
+                    </li>
+
+                </ul>
+                <a href="{{ url_for('client.book_service') }}" class="btn btn-primary d-block">Book Now</a>
+            </div>
+        </nav>
+    </div> -->
+    <!-- Navbar End -->
+    {% endblock navbar %}
+    {% block content %} {% endblock content %}
+
+    {% block footer %}
+        <!-- Footer Start -->
+        {% if not current_user.is_authenticated %}
+        <div class="footer container-fluid bg-dark py-5 sticky-bottom" style="margin-top: 90px;">
+            <div class="container pt-5">
+                <div class="row">
+                    <div class="col-lg-6 pr-lg-5 mb-5">
+                        <a href="{{ url_for('main.home') }}" class="navbar-brand">
+                            <h1 class="mb-3 text-white"><span class="text-primary">SPA</span> Center</h1>
+                        </a>
+                        <p>Discover serenity and elevate your senses at our luxurious spa retreat, where every visit promises a sanctuary of relaxation, rejuvenation, and personalized wellness experiences tailored just for you.</p>
+                        
+                    </div>
+                    <div class="col-lg-6 pr-lg-5 mb-5">
+                        <p><i class="fa fa-map-marker-alt mr-2"></i>Biashara Street, Nakuru, Kenya</p>
+                        <p>
+                            <i class="fa fa-phone-alt mr-2"></i>
+                            <a href="tel:+254799582648">+2547 9958 2648</a>
+                        </p>
+                        <p>
+                            <i class="fa fa-envelope mr-2"></i>
+                            <a href="mailto:glamspa@gmail.com">glamspa@gmail.com</a>
+                        </p>
+                        <div class="d-flex justify-content-start mt-4">
+                            <a class="btn btn-lg btn-primary btn-lg-square mr-2" href="#"><i class="fab fa-twitter"></i></a>
+                            <a class="btn btn-lg btn-primary btn-lg-square mr-2" href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a class="btn btn-lg btn-primary btn-lg-square mr-2" href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a class="btn btn-lg btn-primary btn-lg-square" href="#"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <div class="container-fluid bg-dark text-light border-top py-4" style="border-color: rgba(256, 256, 256, .15) !important;">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md text-center text-md-left mb-3 mb-md-0">
+                        <p class="m-0 text-white">&copy; 2024 <a href="{{ url_for('main.home') }}">Glam Spa</a>. All Rights Reserved.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Footer End -->    
+    
+        <!-- Back to Top -->
+        <a href="#" class="btn btn-lg btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+    {% endblock footer %}
+    {% block scripts %}
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>    
+    {{ bootstrap.load_js() }}
+    <script src="{{ url_for('static', filename='lib/easing/easing.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/waypoints/waypoints.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/counterup/counterup.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/owlcarousel/owl.carousel.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/tempusdominus/js/moment.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/tempusdominus/js/moment-timezone.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.datetimepicker.full.js') }}"></script>
+
+    <!-- Contact Javascript File -->
+    <script src="{{ url_for('static', filename='mail/jqBootstrapValidation.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='mail/contact.js') }}"></script>
+
+    <!-- Template Javascript -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+        const alertList = document.querySelectorAll('.alert')
+        const alerts = [...alertList].map(element => {
+            let new_alert = new bootstrap.Alert(element);
+            setTimeout(function(){
+                new_alert.close();
+            }, 3000)
+        })
+
+        async function getRequest(url='') {
+            const response = await fetch(url, {
+            method: 'GET', 
+            cache: 'no-cache'
+            })
+            return response.json()
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            let url = document.location
+            let route = "/flaskwebgui-keep-server-alive"
+            let interval_request = 3 * 1000 //sec
+
+            function keep_alive_server(){
+                getRequest(url + route)
+                .then(data => console.log(data))
+            }
+
+            setInterval(keep_alive_server, interval_request)()
+
+        })
+    </script>
+    {% endblock scripts %}
+{% endblock body %}
+</body>
+</html>
